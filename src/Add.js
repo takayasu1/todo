@@ -28,7 +28,8 @@ export default class Add extends Component {
   }
 
   add(id, title, description) {
-    firebase.database().ref(id).set({
+    //firebase.database().ref().set({
+    firebase.database().ref().push({
       title: title,
       description: description,
       //image: image,

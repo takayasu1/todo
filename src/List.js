@@ -22,11 +22,23 @@ export default class List extends Component {
     this.state = {
       page: '',
       todoList: [],
+      items: [],
     }
   }
 
   set(val) {
     this.setState({page: val});
+  }
+
+  setItems(i, key) {
+    console.log(i + " " + key);
+    const itemsCopy = this.state.items.slice();
+    itemsCopy[i] = key;
+    this.setState({items: itemsCopy});
+  }
+
+  remove() {
+    //firebase.database.ref(key).remove();
   }
 
   render() {
@@ -44,6 +56,7 @@ export default class List extends Component {
           <table>
             <thead>
               <tr>
+                <th>KEY</th>
                 <th>TODO ID</th>
                 <th>TODO タイトル</th>
                 <th>TODO 説明</th>
@@ -55,12 +68,13 @@ export default class List extends Component {
               {console.log(this.state.todoList)}
               {this.state.todoList.map((data, i) => (
                 <tr>
+                  <td>{this.setItems.bind(this, i, data.key)}</td>
                   <td>{i+1}</td>
                   <td>{data.value.description}</td>
                   <td>{data.value.title}</td>
                   <td>sample update</td>
                   <td><button name="detailButton" onClick={this.set.bind(this, 'detail')}>詳細</button></td>
-                  <td><button onClick={this.set.bind(this)}>削除</button></td>
+                  <td><button onClick={this.remove.bind(this)}>削除</button></td>
                 </tr>
               ))}
             </tbody>
