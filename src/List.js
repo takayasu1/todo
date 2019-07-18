@@ -11,7 +11,7 @@ export default class List extends Component {
                         .ref()
                         .once('value')
                         .then(snapshot => snapshot.val());
-    console.log(todoList);
+    //console.log(todoList);
     //this.setState({todoList: Object.entries(todoList)});
     //this.setState({todoList: Object.keys(todoList).map(function (key) {return todoList[key]})})
     this.setState({todoList: Object.entries(todoList).map(([key, value]) => ({key, value}))});
@@ -37,8 +37,20 @@ export default class List extends Component {
     this.setState({items: itemsCopy});
   }
 
-  remove() {
-    //firebase.database.ref(key).remove();
+  async remove(key) {
+    //console.log(firebase.database);
+    firebase.database().ref(key).remove();
+
+    const todoList = await firebase
+                        .database()
+                        .ref()
+                        .once('value')
+                        .then(snapshot => snapshot.val());
+    if (todoList) {
+        this.setState({todoList: Object.entries(todoList).map(([key, value]) => ({key, value}))});
+    } else {
+        this.setState({todoList: []});
+    }
   }
 
   render() {
@@ -74,7 +86,7 @@ export default class List extends Component {
                   <td>{data.value.title}</td>
                   <td>sample update</td>
                   <td><button name="detailButton" onClick={this.set.bind(this, 'detail')}>詳細</button></td>
-                  <td><button onClick={this.remove.bind(this)}>削除</button></td>
+                  <td><button onClick={this.remove.bind(this, data.key)}>削除</button></td>
                 </tr>
               ))}
             </tbody>
